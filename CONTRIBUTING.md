@@ -12,6 +12,11 @@ Table of contents
 
 - [Feedback](#feedback)
 - [Good starting points](#good-starting-points)
+  - [🦜 New to terminals?](#%F0%9F%A6%9C-new-to-terminals)
+  - [🐒 New to R3BL codebase?](#-new-to-r3bl-codebase)
+    - [Redux background study](#redux-background-study)
+    - [TUI background study](#tui-background-study)
+    - [General background study](#general-background-study)
 - [Developing](#developing)
   - [Set up](#set-up)
   - [Code style](#code-style)
@@ -42,11 +47,76 @@ If you want to get started, check out the list of
 You can also browse the more information TODOs in [TODO.todo](TODO.todo) which haven't been turned
 into issues yet.
 
+> Please follow the [Rust Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct) all
+> the way through!
+
+The learning path below will help you get started. These emoji below will give you a sense how
+important the related information is to using the R3BL codebase.
+
+| Command  | Description                                        |
+| -------- | -------------------------------------------------- |
+| 🍌       | Nice to know it exists                             |
+| 🍌🍌     | Have a high level understanding of                 |
+| 🍌🍌🍌   | Working knowledge                                  |
+| 🍌🍌🍌🍌 | Critical - deep understanding & hands on exercises |
+
+### 🦜 New to terminals?
+<a id="markdown-%F0%9F%A6%9C-new-to-terminals%3F" name="%F0%9F%A6%9C-new-to-terminals%3F"></a>
+
+
+1. 🍌🍌🍌🍌 A really good first step is taking a look at `crossterm` crate.
+   - It is small and relatively straight forward to understand. This will give you good exposure to
+     the underlying terminal stuff.
+   - Here's a link to the repo's
+     [examples](https://github.com/crossterm-rs/crossterm/tree/master/examples). Clone it, and play
+     w/ some of these examples to make some changes and run them in your favorite terminal.
+2. 🍌🍌 Here's some
+   [documentation](https://docs.rs/r3bl_rs_utils/0.7.41/r3bl_rs_utils/tui/crossterm_helpers/index.html)
+   w/ lots of background information on terminals, PTY, TTY, etc.
+
+### 🐒 New to R3BL codebase?
+<a id="markdown-%F0%9F%90%92-new-to-r3bl-codebase%3F" name="%F0%9F%90%92-new-to-r3bl-codebase%3F"></a>
+
+
+#### Redux background study
+<a id="markdown-redux-background-study" name="redux-background-study"></a>
+
+
+1. 🍌🍌🍌 A great starting point is the [redux](https://github.com/r3bl-org/r3bl_rs_utils#redux)
+   section.
+2. 🍌🍌🍌🍌 This [repo](https://github.com/r3bl-org/address-book-with-redux-tui/releases/tag/1.0) is
+   a good one to start working on first.
+   - This app was intended to be a pedagogical example.
+   - This repo is for a simple address book CLI app that does _NOT_ have TUI support. But it does
+     have _Redux_ support. So you don't have to learn both at the same time.
+   - Check out how Redux functions here. How things work in an async manner (middlewares, etc). Run
+     the code using `cargo run`, and make some changes and run it again.
+
+#### TUI background study
+<a id="markdown-tui-background-study" name="tui-background-study"></a>
+
+
+1. 🍌🍌🍌🍌 A great starting point is this [tui](https://github.com/r3bl-org/r3bl_rs_utils#tui)
+   section.
+
+   - [Example of TUI only w/out layout](https://github.com/r3bl-org/r3bl-cmdr/tree/main/src/ex_app_no_layout)
+   - [Example of TUI only w/ layout](https://github.com/r3bl-org/r3bl-cmdr/tree/main/src/ex_app_with_layout)
+
+2. 🍌🍌🍌🍌 Here's a
+   [repo](https://github.com/r3bl-org/address-book-with-redux-tui/releases/tag/1.0) that is a good
+   one to start working on first.
+   - The mission is to convert it to have support for the TUI library. This will give you a solid on
+     how to build TUIs.
+
+#### General background study
+<a id="markdown-general-background-study" name="general-background-study"></a>
+
+
 Here are some resources to learn more about the project itself:
 
-1. [r3bl_rs_utils repo README](https://github.com/r3bl-org/r3bl_rs_utils/blob/main/README.md).
-1. [r3bl-cmdr repo README](https://github.com/r3bl-org/r3bl-cmdr/blob/main/README.md).
-2. [Related content on developerlife.com](https://developerlife.com/category/Rust/).
+- [r3bl_rs_utils repo README](https://github.com/r3bl-org/r3bl_rs_utils/blob/main/README.md).
+- [r3bl-cmdr repo README](https://github.com/r3bl-org/r3bl-cmdr/blob/main/README.md).
+- [Related content on developerlife.com](https://developerlife.com/category/Rust/).
 
 ## Developing
 <a id="markdown-developing" name="developing"></a>
