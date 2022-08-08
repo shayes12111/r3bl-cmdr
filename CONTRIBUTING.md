@@ -28,12 +28,15 @@ Table of contents
 <a id="markdown-feedback" name="feedback"></a>
 
 
+> ⚙️ This library crate is in service of the apps being built in the
+> [r3bl-cmdr](https://github.com/r3bl-org/r3bl-cmdr/) crate / project.
+
 While the maintainers might currently prioritize working on features, we are open to ideas and
 contributions by people and projects interested in using `r3bl_rs_utils` or `r3bl-cmdr` for other
 projects. Please feel free to:
 
-1. Open an [issue](https://github.com/r3bl-org/r3bl-cmdr/issues/new/choose).
-2. Chat with us on the [r3bl discord](https://discord.gg/pG4wjDnm) in the dedicated `#r3bl-cmdr`
+1. Open an [issue](https://github.com/r3bl-org/r3bl_rs_utils/issues/new/choose).
+2. Chat with us on the [r3bl discord](https://discord.gg/pG4wjDnm) in the dedicated `#r3bl_rs_utils`
    channel.
 
 ## Good starting points
