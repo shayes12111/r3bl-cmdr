@@ -20,6 +20,7 @@ use std::fmt::{Display, Formatter};
 /// Action.
 #[derive(Clone, Debug)]
 #[non_exhaustive]
+#[allow(dead_code)]
 pub enum AppWithLayoutAction {
   Startup,
   AddPop(i32),
