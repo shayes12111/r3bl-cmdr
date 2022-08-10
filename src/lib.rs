@@ -35,6 +35,9 @@
 //!   - Redux for state management (fully async, concurrent & parallel).
 //!   - A lolcat implementation w/ a rainbow color-wheel palette.
 
+#![warn(clippy::all)]
+#![warn(rust_2018_idioms)]
+
 // Attach sources.
 
 // Re-export.

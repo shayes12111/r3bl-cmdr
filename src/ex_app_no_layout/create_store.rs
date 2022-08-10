@@ -27,7 +27,6 @@ pub async fn create_store() -> Store<AppNoLayoutState, AppNoLayoutAction> {
   store
 }
 
-
 /// Action.
 #[derive(Clone, Debug)]
 #[non_exhaustive]

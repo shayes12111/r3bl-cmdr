@@ -15,6 +15,9 @@
  *   limitations under the License.
  */
 
+#![warn(clippy::all)]
+#![warn(rust_2018_idioms)]
+
 use std::borrow::Cow;
 
 use r3bl_rs_utils::*;
@@ -29,8 +32,6 @@ mod utils;
 // Use things from sources.
 use ex_app_no_layout::*;
 use ex_app_with_layout::*;
-
-
 use reedline::*;
 use utils::*;
 
@@ -68,7 +69,7 @@ async fn run_ex_for_user_selection(selection: Cow<'_, str>) -> CommonResult<()> 
 fn get_user_selection<'a>() -> Cow<'a, str> {
   let mut line_editor = Reedline::create();
   let prompt = DefaultPrompt::default();
-  let mut selection: Cow<str> = Cow::from("");
+  let mut selection: Cow<'_, str> = Cow::from("");
 
   loop {
     let maybe_signal = &line_editor.read_line(&prompt);
