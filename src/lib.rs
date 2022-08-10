@@ -35,6 +35,8 @@
 //!   - Redux for state management (fully async, concurrent & parallel).
 //!   - A lolcat implementation w/ a rainbow color-wheel palette.
 
+// https://github.com/rust-lang/rust-clippy
+// https://rust-lang.github.io/rust-clippy/master/index.html
 #![warn(clippy::all)]
 #![warn(rust_2018_idioms)]
 
