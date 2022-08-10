@@ -2,15 +2,17 @@
   <img src="r3bl-term.svg" height="128px">
 </p>
 
-# Contributing
-<a id="markdown-contributing" name="contributing"></a>
+# Contributing to r3bl-cmdr crate
+<a id="markdown-contributing-to-r3bl-cmdr-crate" name="contributing-to-r3bl-cmdr-crate"></a>
 
 
 Table of contents
 
 <!-- TOC -->
 
+- [How are R3BL repos / crates organized?](#how-are-r3bl-repos--crates-organized)
 - [Feedback](#feedback)
+- [Code of conduct and code style guide](#code-of-conduct-and-code-style-guide)
 - [Good starting points](#good-starting-points)
   - [🦜 New to terminals?](#%F0%9F%A6%9C-new-to-terminals)
   - [🐒 New to R3BL codebase?](#-new-to-r3bl-codebase)
@@ -24,12 +26,23 @@ Table of contents
 
 <!-- /TOC -->
 
+## How are R3BL repos / crates organized?
+<a id="markdown-how-are-r3bl-repos-%2F-crates-organized%3F" name="how-are-r3bl-repos-%2F-crates-organized%3F"></a>
+
+
+| Repo                                | Description of crate                       | Notes           |
+| ----------------------------------- | ------------------------------------------ | --------------- |
+| [`r3bl-cmdr`][rc]                   | TUI app for end users                      | 📍 You are here |
+| [`r3bl_rs_utils`][rs]               | Reusable library in service of `r3bl-cmdr` |                 |
+| [`address-book-with-redux-tui`][ab] | Pedagogical example of Redux, and TUI      |                 |
+
+[rc]: https://github.com/r3bl-org/r3bl-cmdr/
+[rs]: https://github.com/r3bl-org/r3bl_rs_utils/
+[ab]: https://github.com/r3bl-org/address-book-with-redux-tui/
+
 ## Feedback
 <a id="markdown-feedback" name="feedback"></a>
 
-
-> ⚙️ This library crate is in service of the apps being built in the
-> [r3bl-cmdr](https://github.com/r3bl-org/r3bl-cmdr/) crate / project.
 
 While the maintainers might currently prioritize working on features, we are open to ideas and
 contributions by people and projects interested in using `r3bl_rs_utils` or `r3bl-cmdr` for other
@@ -38,6 +51,16 @@ projects. Please feel free to:
 1. Open an [issue](https://github.com/r3bl-org/r3bl_rs_utils/issues/new/choose).
 2. Chat with us on the [r3bl discord](https://discord.gg/pG4wjDnm) in the dedicated `#r3bl_rs_utils`
    channel.
+
+## Code of conduct and code style guide
+<a id="markdown-code-of-conduct-and-code-style-guide" name="code-of-conduct-and-code-style-guide"></a>
+
+
+1. Please follow the [Rust Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct) all
+   the way through!
+2. Also follow the guidelines provided in this [repo](https://github.com/r3bl-org/guidelines).
+   - [R3BL code of conduct](https://github.com/r3bl-org/guidelines/blob/main/CODE_OF_CONDUCT.md).
+   - [R3BL code style guide](https://github.com/r3bl-org/guidelines/blob/main/STYLE_GUIDE.md).
 
 ## Good starting points
 <a id="markdown-good-starting-points" name="good-starting-points"></a>
@@ -49,9 +72,6 @@ If you want to get started, check out the list of
 
 You can also browse the more information TODOs in [TODO.todo](TODO.todo) which haven't been turned
 into issues yet.
-
-> Please follow the [Rust Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct) all
-> the way through!
 
 The learning path below will help you get started. These emoji below will give you a sense how
 important the related information is to using the R3BL codebase.
