@@ -24,8 +24,7 @@ pub mod ex_app_no_layout;
 pub mod ex_app_with_layout;
 pub mod ex_editor;
 pub mod ex_lolcat;
-
-mod utils;
+pub mod utils;
 
 // Use things from sources.
 pub use ex_app_no_layout::*;
@@ -33,6 +32,7 @@ pub use ex_app_with_layout::*;
 pub use ex_editor::*;
 pub use ex_lolcat::*;
 use reedline::*;
+pub use utils::*;
 
 const HELP_MSG: &str = "\
 Type a number to run corresponding example:

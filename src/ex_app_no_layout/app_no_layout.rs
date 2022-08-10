@@ -18,7 +18,7 @@
 use async_trait::async_trait;
 use crossterm::event::*;
 
-use crate::{*, utils::append_quit_msg_center_bottom};
+use crate::*;
 
 /// Async trait object that implements the [Render] trait.
 #[derive(Default, Debug, Clone, Copy)]
