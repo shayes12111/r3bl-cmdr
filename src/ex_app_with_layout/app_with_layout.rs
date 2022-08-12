@@ -18,7 +18,7 @@
 use std::{fmt::Debug, sync::Arc};
 
 use async_trait::async_trait;
-use crossterm::event::*;
+use crossterm::{event::*, style::Color};
 use r3bl_rs_utils::*;
 use tokio::sync::RwLock;
 
@@ -252,27 +252,19 @@ impl AppWithLayout {
   }
 
   fn create_stylesheet(&mut self) -> CommonResult<Stylesheet> {
-    // Turquoise:  Color::Rgb { r: 51, g: 255, b: 255 }
-    // Pink:       Color::Rgb { r: 252, g: 157, b: 248 }
-    // Blue:       Color::Rgb { r: 55, g: 55, b: 248 }
-    // Faded blue: Color::Rgb { r: 85, g: 85, b: 255 }
     throws_with_return!({
-      let mut stylesheet = Stylesheet::new();
-
-      stylesheet.add_styles(vec![
+      stylesheet! {
         style! {
-          id: style1
+          id: style2
           margin: 1
           color_bg: Color::Rgb { r: 55, g: 55, b: 248 }
         },
         style! {
           id: style2
           margin: 1
-          color_bg: Color::Rgb { r: 85, g: 85, b: 255 }
-        },
-      ])?;
-
-      stylesheet
+          color_bg: Color::Rgb { r: 55, g: 55, b: 248 }
+        }
+      }
     })
   }
 }
