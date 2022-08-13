@@ -255,9 +255,9 @@ impl AppWithLayout {
     throws_with_return!({
       stylesheet! {
         style! {
-          id: style2
+          id: style1
           margin: 1
-          color_bg: Color::Rgb { r: 55, g: 55, b: 248 }
+          color_bg: Color::Rgb { r: 55, g: 55, b: 100 }
         },
         style! {
           id: style2
