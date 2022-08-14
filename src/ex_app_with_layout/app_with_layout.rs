@@ -24,26 +24,17 @@ use tokio::sync::RwLock;
 
 use crate::*;
 
+// Constants for the ids.
+const CONTAINER_ID: &str = "container";
+const COL_1_ID: &str = "col_1";
+const COL_2_ID: &str = "col_2";
+
 /// Async trait object that implements the [TWApp] trait.
 #[derive(Default)]
 pub struct AppWithLayout {
   pub component_registry: ComponentRegistry<AppWithLayoutState, AppWithLayoutAction>,
   pub has_focus: HasFocus,
 }
-
-impl Debug for AppWithLayout {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    f.debug_struct("AppWithLayout")
-      .field("component_registry", &self.component_registry)
-      .field("state_manage_focus_data", &self.has_focus)
-      .finish()
-  }
-}
-
-// Constants for the ids.
-const CONTAINER_ID: &str = "container";
-const COL_1_ID: &str = "col_1";
-const COL_2_ID: &str = "col_2";
 
 #[async_trait]
 impl TWApp<AppWithLayoutState, AppWithLayoutAction> for AppWithLayout {
@@ -81,7 +72,7 @@ impl TWApp<AppWithLayoutState, AppWithLayoutAction> for AppWithLayout {
     throws_with_return!({
       self.create_components_populate_registry_init_focus().await;
       let mut tw_surface = TWSurface {
-        stylesheet: self.create_stylesheet()?,
+        stylesheet: helpers::create_stylesheet()?,
         ..TWSurface::default()
       };
       tw_surface.surface_start(TWSurfaceProps {
@@ -92,7 +83,7 @@ impl TWApp<AppWithLayoutState, AppWithLayoutAction> for AppWithLayout {
         .create_main_container(&mut tw_surface, state, shared_store)
         .await?;
       tw_surface.surface_end()?;
-      append_quit_msg_center_bottom(&mut tw_surface.render_buffer, window_size);
+      helpers::create_status_bar_message(&mut tw_surface.render_buffer, window_size);
       tw_surface.render_buffer
     });
   }
@@ -250,8 +241,21 @@ impl AppWithLayout {
       tw_surface.box_end()?;
     });
   }
+}
 
-  fn create_stylesheet(&mut self) -> CommonResult<Stylesheet> {
+mod helpers {
+  use super::*;
+
+  impl Debug for AppWithLayout {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+      f.debug_struct("AppWithLayout")
+        .field("component_registry", &self.component_registry)
+        .field("state_manage_focus_data", &self.has_focus)
+        .finish()
+    }
+  }
+
+  pub fn create_stylesheet() -> CommonResult<Stylesheet> {
     throws_with_return!({
       stylesheet! {
         style! {
@@ -266,5 +270,25 @@ impl AppWithLayout {
         }
       }
     })
+  }
+
+  /// Shows helpful messages at the bottom row of the screen.
+  pub fn create_status_bar_message(queue: &mut TWCommandQueue, size: Size) {
+    let st_vec = styled_text_vec! {
+      styled_text! { "Hints:",            gen_attrib_style!(@dim)       },
+      styled_text! { " Ctrl+q: Exit ⛔ ", gen_attrib_style!(@bold)      },
+      styled_text! { " … ",               gen_attrib_style!(@dim)       },
+      styled_text! { " ↑ / + : inc ",     gen_attrib_style!(@underline) },
+      styled_text! { " … ",               gen_attrib_style!(@dim)       },
+      styled_text! { " ↓ / - : dec ",     gen_attrib_style!(@underline) }
+    };
+
+    let display_width = st_vec.unicode_string().display_width;
+    let col_center: UnitType = (size.cols / 2) - (display_width / 2);
+    let row_bottom: UnitType = size.rows - 1;
+    let center: Position = (col_center, row_bottom).into();
+
+    *queue += TWCommand::MoveCursorPositionAbs(center);
+    *queue += st_vec.render();
   }
 }

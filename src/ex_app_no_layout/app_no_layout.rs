@@ -49,7 +49,7 @@ impl TWApp<AppNoLayoutState, AppNoLayoutAction> for AppNoLayout {
         TWCommand::ResetColor
       );
 
-      append_quit_msg_center_bottom(&mut queue, window_size);
+      helpers::create_status_bar_message(&mut queue, window_size);
 
       call_if_true!(DEBUG, {
         log_no_err!(
@@ -148,5 +148,29 @@ impl TWApp<AppNoLayoutState, AppNoLayoutAction> for AppNoLayout {
         EventPropagation::Propagate
       }
     });
+  }
+}
+
+mod helpers {
+  use r3bl_rs_utils::*;
+
+  /// Shows helpful messages at the bottom row of the screen.
+  pub fn create_status_bar_message(queue: &mut TWCommandQueue, size: Size) {
+    let st_vec = styled_text_vec! {
+      styled_text! { "Hints:",            gen_attrib_style!(@dim)       },
+      styled_text! { " Ctrl+q: Exit ⛔ ", gen_attrib_style!(@bold)      },
+      styled_text! { " … ",               gen_attrib_style!(@dim)       },
+      styled_text! { " ↑ / + : inc ",     gen_attrib_style!(@underline) },
+      styled_text! { " … ",               gen_attrib_style!(@dim)       },
+      styled_text! { " ↓ / - : dec ",     gen_attrib_style!(@underline) }
+    };
+
+    let display_width = st_vec.unicode_string().display_width;
+    let col_center: UnitType = (size.cols / 2) - (display_width / 2);
+    let row_bottom: UnitType = size.rows - 1;
+    let center: Position = (col_center, row_bottom).into();
+
+    *queue += TWCommand::MoveCursorPositionAbs(center);
+    *queue += st_vec.render();
   }
 }

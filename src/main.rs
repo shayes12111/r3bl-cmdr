@@ -29,13 +29,11 @@ mod ex_app_no_layout;
 mod ex_app_with_layout;
 mod ex_editor;
 mod ex_lolcat;
-mod utils;
 
 // Use things from sources.
 use ex_app_no_layout::*;
 use ex_app_with_layout::*;
 use reedline::*;
-use utils::*;
 
 const HELP_MSG: &str = "\
 Type a number to run corresponding example:

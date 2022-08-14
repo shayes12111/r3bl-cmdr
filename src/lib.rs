@@ -39,7 +39,3 @@
 // https://rust-lang.github.io/rust-clippy/master/index.html
 #![warn(clippy::all)]
 #![warn(rust_2018_idioms)]
-
-// Attach sources.
-
-// Re-export.
