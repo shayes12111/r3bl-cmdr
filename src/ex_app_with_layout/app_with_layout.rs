@@ -18,7 +18,7 @@
 use std::{fmt::Debug, sync::Arc};
 
 use async_trait::async_trait;
-use crossterm::{event::*, style::Color};
+use crossterm::event::*;
 use r3bl_rs_utils::*;
 use tokio::sync::RwLock;
 
@@ -72,7 +72,7 @@ impl TWApp<AppWithLayoutState, AppWithLayoutAction> for AppWithLayout {
     throws_with_return!({
       self.create_components_populate_registry_init_focus().await;
       let mut tw_surface = TWSurface {
-        stylesheet: helpers::create_stylesheet()?,
+        stylesheet: style_helpers::create_stylesheet()?,
         ..TWSurface::default()
       };
       tw_surface.surface_start(TWSurfaceProps {
@@ -83,7 +83,9 @@ impl TWApp<AppWithLayoutState, AppWithLayoutAction> for AppWithLayout {
         .create_main_container(&mut tw_surface, state, shared_store)
         .await?;
       tw_surface.surface_end()?;
-      helpers::create_status_bar_message(&mut tw_surface.render_buffer, window_size);
+
+      status_bar_helpers::render(&mut tw_surface.render_buffer, window_size);
+
       tw_surface.render_buffer
     });
   }
@@ -243,7 +245,7 @@ impl AppWithLayout {
   }
 }
 
-mod helpers {
+mod app_with_layout_helpers {
   use super::*;
 
   impl Debug for AppWithLayout {
@@ -254,6 +256,10 @@ mod helpers {
         .finish()
     }
   }
+}
+
+mod style_helpers {
+  use super::*;
 
   pub fn create_stylesheet() -> CommonResult<Stylesheet> {
     throws_with_return!({
@@ -261,26 +267,30 @@ mod helpers {
         style! {
           id: style1
           margin: 1
-          color_bg: Color::Rgb { r: 55, g: 55, b: 100 }
+          color_bg: TWColor::Rgb { r: 55, g: 55, b: 100 }
         },
         style! {
           id: style2
           margin: 1
-          color_bg: Color::Rgb { r: 55, g: 55, b: 248 }
+          color_bg: TWColor::Rgb { r: 55, g: 55, b: 248 }
         }
       }
     })
   }
+}
+
+mod status_bar_helpers {
+  use super::*;
 
   /// Shows helpful messages at the bottom row of the screen.
-  pub fn create_status_bar_message(queue: &mut TWCommandQueue, size: Size) {
+  pub fn render(queue: &mut TWCommandQueue, size: Size) {
     let st_vec = styled_texts! {
-      styled_text! { "Hints:",            gen_attrib_style!(@dim)       },
-      styled_text! { " Ctrl+q: Exit ⛔ ", gen_attrib_style!(@bold)      },
-      styled_text! { " … ",               gen_attrib_style!(@dim)       },
-      styled_text! { " ↑ / + : inc ",     gen_attrib_style!(@underline) },
-      styled_text! { " … ",               gen_attrib_style!(@dim)       },
-      styled_text! { " ↓ / - : dec ",     gen_attrib_style!(@underline) }
+      styled_text! { "Hints:",            style!(attrib: [dim])       },
+      styled_text! { " Ctrl+q: Exit ⛔ ", style!(attrib: [bold])      },
+      styled_text! { " … ",               style!(attrib: [dim])       },
+      styled_text! { " ↑ / + : inc ",     style!(attrib: [underline]) },
+      styled_text! { " … ",               style!(attrib: [dim])       },
+      styled_text! { " ↓ / - : dec ",     style!(attrib: [underline]) }
     };
 
     let display_width = st_vec.unicode_string().display_width;

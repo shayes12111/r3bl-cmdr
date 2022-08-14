@@ -49,7 +49,7 @@ impl TWApp<AppNoLayoutState, AppNoLayoutAction> for AppNoLayout {
         TWCommand::ResetColor
       );
 
-      helpers::create_status_bar_message(&mut queue, window_size);
+      status_bar_helpers::create_status_bar_message(&mut queue, window_size);
 
       call_if_true!(DEBUG, {
         log_no_err!(
@@ -151,18 +151,18 @@ impl TWApp<AppNoLayoutState, AppNoLayoutAction> for AppNoLayout {
   }
 }
 
-mod helpers {
+mod status_bar_helpers {
   use r3bl_rs_utils::*;
 
   /// Shows helpful messages at the bottom row of the screen.
   pub fn create_status_bar_message(queue: &mut TWCommandQueue, size: Size) {
     let st_vec = styled_texts! {
-      styled_text! { "Hints:",            gen_attrib_style!(@dim)       },
-      styled_text! { " Ctrl+q: Exit ⛔ ", gen_attrib_style!(@bold)      },
-      styled_text! { " … ",               gen_attrib_style!(@dim)       },
-      styled_text! { " ↑ / + : inc ",     gen_attrib_style!(@underline) },
-      styled_text! { " … ",               gen_attrib_style!(@dim)       },
-      styled_text! { " ↓ / - : dec ",     gen_attrib_style!(@underline) }
+      styled_text! { "Hints:",            style!(attrib: [dim])       },
+      styled_text! { " Ctrl+q: Exit ⛔ ", style!(attrib: [bold])      },
+      styled_text! { " … ",               style!(attrib: [dim])       },
+      styled_text! { " ↑ / + : inc ",     style!(attrib: [underline]) },
+      styled_text! { " … ",               style!(attrib: [dim])       },
+      styled_text! { " ↓ / - : dec ",     style!(attrib: [underline]) }
     };
 
     let display_width = st_vec.unicode_string().display_width;
