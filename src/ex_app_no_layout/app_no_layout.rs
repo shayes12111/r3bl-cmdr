@@ -156,7 +156,7 @@ mod helpers {
 
   /// Shows helpful messages at the bottom row of the screen.
   pub fn create_status_bar_message(queue: &mut TWCommandQueue, size: Size) {
-    let st_vec = styled_text_vec! {
+    let st_vec = styled_texts! {
       styled_text! { "Hints:",            gen_attrib_style!(@dim)       },
       styled_text! { " Ctrl+q: Exit ⛔ ", gen_attrib_style!(@bold)      },
       styled_text! { " … ",               gen_attrib_style!(@dim)       },
