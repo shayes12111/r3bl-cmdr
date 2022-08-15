@@ -158,7 +158,7 @@ mod status_bar_helpers {
   pub fn create_status_bar_message(queue: &mut TWCommandQueue, size: Size) {
     let st_vec = styled_texts! {
       styled_text! { "Hints:",            style!(attrib: [dim])       },
-      styled_text! { " Ctrl+q: Exit ⛔ ", style!(attrib: [bold])      },
+      styled_text! { " x : Exit ⛔ ",     style!(attrib: [bold])      },
       styled_text! { " … ",               style!(attrib: [dim])       },
       styled_text! { " ↑ / + : inc ",     style!(attrib: [underline]) },
       styled_text! { " … ",               style!(attrib: [dim])       },

@@ -15,7 +15,6 @@
  *   limitations under the License.
  */
 
-use crossterm::event::*;
 use r3bl_rs_utils::*;
 
 use super::*;
@@ -35,10 +34,7 @@ pub async fn run_app() -> CommonResult<()> {
     let shared_app = AppWithLayout::new_shared();
 
     // Exit if these keys are pressed.
-    let exit_keys: Vec<KeyEvent> = vec![KeyEvent {
-      code: KeyCode::Char('q'),
-      modifiers: KeyModifiers::CONTROL,
-    }];
+    let exit_keys: Vec<TWInputEvent> = vec![TWInputEvent::DisplayableKeypress('x')];
 
     // Create a window.
     TerminalWindow::main_event_loop(store, shared_app, exit_keys).await?
