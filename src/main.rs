@@ -20,8 +20,6 @@
 #![warn(clippy::all)]
 #![warn(rust_2018_idioms)]
 
-use std::borrow::Cow;
-
 use r3bl_rs_utils::*;
 
 // Attach sources.
@@ -47,12 +45,35 @@ or type Ctrl+C / Ctrl+D / 'x' to exit";
 async fn main() -> CommonResult<()> {
   throws!({
     println!("{}", HELP_MSG);
-    let selection = get_user_selection();
-    run_ex_for_user_selection(selection).await?;
+    let maybe_user_selection_string = get_user_selection_from_terminal();
+    if let Some(user_selection) = maybe_user_selection_string {
+      run_user_selected_example(user_selection).await?;
+    }
   })
 }
 
-async fn run_ex_for_user_selection(selection: Cow<'_, str>) -> CommonResult<()> {
+/// This is a single threaded blocking function. The R3BL examples are all async and non-blocking.
+fn get_user_selection_from_terminal() -> Option<String> {
+  let mut line_editor = Reedline::create();
+  let prompt = DefaultPrompt::default();
+
+  loop {
+    let maybe_signal = &line_editor.read_line(&prompt);
+    if let Ok(Signal::Success(user_input_str)) = maybe_signal {
+      match user_input_str.as_str() {
+        code @ ("1" | "2" | "3" | "4") => return Some(code.into()),
+        "x" => break,
+        _ => println!("Unknown command: {}", user_input_str),
+      }
+    } else if let Ok(Signal::CtrlC) | Ok(Signal::CtrlD) = maybe_signal {
+      break;
+    }
+  }
+
+  None
+}
+
+async fn run_user_selected_example(selection: String) -> CommonResult<()> {
   throws!({
     if !selection.is_empty() {
       match selection.as_ref() {
@@ -64,28 +85,4 @@ async fn run_ex_for_user_selection(selection: Cow<'_, str>) -> CommonResult<()> 
       }
     }
   })
-}
-
-fn get_user_selection<'a>() -> Cow<'a, str> {
-  let mut line_editor = Reedline::create();
-  let prompt = DefaultPrompt::default();
-  let mut selection: Cow<'_, str> = Cow::from("");
-
-  loop {
-    let maybe_signal = &line_editor.read_line(&prompt);
-    if let Ok(Signal::Success(user_input_str)) = maybe_signal {
-      match user_input_str.as_str() {
-        code @ ("1" | "2" | "3") => {
-          selection.to_mut().push_str(code);
-          break;
-        }
-        "x" => break,
-        _ => println!("Unknown command: {}", user_input_str),
-      }
-    } else if let Ok(Signal::CtrlC) | Ok(Signal::CtrlD) = maybe_signal {
-      break;
-    }
-  }
-
-  selection
 }

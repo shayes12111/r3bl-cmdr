@@ -35,6 +35,7 @@ async-trait = "0.1.57"
 
 # Latest r3bl_rs_utils.
 r3bl_rs_utils = { version = "0.7.41", path = "../r3bl_rs_utils" }
+r3bl_rs_utils_core = { version = "0.7.13", path = "../r3bl_rs_utils/core" }
 
 # Reedline.
 reedline = "0.9.0"
