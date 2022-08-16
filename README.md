@@ -56,6 +56,27 @@ This TUI (text user interface) app showcases the use of the `r3bl_rs_utils` crat
 a few sample apps which are meant to be relevant use cases that are relevant for developer workflows
 (who are remote, and work w/ teams).
 
+# Building & running locally
+
+The `Cargo.toml` file contains a `[dependencies]` section which lists all the dependencies that this
+crate has, one of which is a
+[path dependency](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#multiple-locations)
+on the `r3bl_rs_utils` crate. The creates.io version uses the `r3bl_rs_utils` crate from the
+crates.io repository, but your local copy will use the folder specified in the path.
+
+> We plan to remove the `path` dependency when this crate is ready to be used by end users.
+> Currently it early WIP so it has this dependency for ease of development.
+
+So, to build and run this locally, you have to clone the
+[r3bl_rs_utils](https://github.com/r3bl-org/r3bl_rs_utils) repo so that it shares the same parent as
+this crate. Here's a sample folder structure.
+
+```text
+├── github
+│     ├── r3bl-cmdr
+│     └── r3bl-rs-utils
+```
+
 # Contributing
 
 <a id="markdown-contributing" name="contributing"></a>
@@ -65,3 +86,7 @@ examples are evolved into features of the actual product, which is intended to b
 developers.
 
 Please read our [community contributing guidelines here](./CONTRIBUTING.md).
+
+```
+
+```
