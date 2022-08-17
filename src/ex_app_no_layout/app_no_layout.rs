@@ -16,7 +16,6 @@
  */
 
 use async_trait::async_trait;
-use crossterm::event::*;
 
 use crate::*;
 
@@ -108,11 +107,11 @@ impl TWApp<AppNoLayoutState, AppNoLayoutAction> for AppNoLayout {
         }
       }
 
-      if let TWInputEvent::NonDisplayableKeypress(key_event) = input_event {
-        match key_event {
-          KeyEvent {
-            code: KeyCode::Up,
-            modifiers: KeyModifiers::NONE,
+      if let TWInputEvent::NonDisplayableKeypress(keypress) = input_event {
+        match keypress {
+          Keypress {
+            modifier_keys: None,
+            non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Up)),
           } => {
             spawn_and_consume_event!(event_consumed, shared_store, AppNoLayoutAction::AddPop(1));
             call_if_true!(
@@ -124,9 +123,9 @@ impl TWApp<AppNoLayoutState, AppNoLayoutAction> for AppNoLayout {
               )
             );
           }
-          KeyEvent {
-            code: KeyCode::Down,
-            modifiers: KeyModifiers::NONE,
+          Keypress {
+            modifier_keys: None,
+            non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Down)),
           } => {
             spawn_and_consume_event!(event_consumed, shared_store, AppNoLayoutAction::SubPop(1));
             call_if_true!(

@@ -16,7 +16,6 @@
  */
 
 use async_trait::async_trait;
-use crossterm::event::*;
 use r3bl_rs_utils::*;
 
 use super::*;
@@ -29,7 +28,7 @@ pub struct ColumnRenderComponent {
 #[async_trait]
 impl Component<AppWithLayoutState, AppWithLayoutAction> for ColumnRenderComponent {
   /// Handle following input events (and consume them):
-  /// - Up, `+`   : fire `AddPop(1)`
+  /// - Up,   `+` : fire `AddPop(1)`
   /// - Down, `-` : fire `SubPop(1)`
   async fn handle_event(
     &mut self, input_event: &TWInputEvent, _state: &AppWithLayoutState,
@@ -58,11 +57,11 @@ impl Component<AppWithLayoutState, AppWithLayoutAction> for ColumnRenderComponen
         }
       }
 
-      if let TWInputEvent::NonDisplayableKeypress(key_event) = input_event {
-        match key_event {
-          KeyEvent {
-            code: KeyCode::Up,
-            modifiers: KeyModifiers::NONE,
+      if let TWInputEvent::NonDisplayableKeypress(keypress) = input_event {
+        match keypress {
+          Keypress {
+            modifier_keys: None,
+            non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Up)),
           } => {
             spawn_and_consume_event!(event_consumed, shared_store, AppWithLayoutAction::AddPop(1));
             debug_log_action(
@@ -70,9 +69,9 @@ impl Component<AppWithLayoutState, AppWithLayoutAction> for ColumnRenderComponen
               AppWithLayoutAction::AddPop(1),
             );
           }
-          KeyEvent {
-            code: KeyCode::Down,
-            modifiers: KeyModifiers::NONE,
+          Keypress {
+            modifier_keys: None,
+            non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Down)),
           } => {
             spawn_and_consume_event!(event_consumed, shared_store, AppWithLayoutAction::SubPop(1));
             debug_log_action(

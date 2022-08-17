@@ -98,11 +98,11 @@ impl AppWithLayout {
     let mut event_consumed = false;
 
     // Handle Left, Right to switch focus between columns.
-    if let TWInputEvent::NonDisplayableKeypress(key_event) = input_event {
-      match key_event {
-        KeyEvent {
-          code: KeyCode::Left,
-          modifiers: KeyModifiers::NONE,
+    if let TWInputEvent::NonDisplayableKeypress(keypress) = input_event {
+      match keypress {
+        Keypress {
+          modifier_keys: None,
+          non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Left)),
         } => {
           event_consumed = true;
           self.switch_focus(KeyCode::Left);
@@ -111,9 +111,9 @@ impl AppWithLayout {
             &self.has_focus,
           );
         }
-        KeyEvent {
-          code: KeyCode::Right,
-          modifiers: KeyModifiers::NONE,
+        Keypress {
+          modifier_keys: None,
+          non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Right)),
         } => {
           event_consumed = true;
           self.switch_focus(KeyCode::Right);
