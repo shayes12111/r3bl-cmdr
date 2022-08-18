@@ -101,8 +101,8 @@ impl AppWithLayout {
     if let TWInputEvent::NonDisplayableKeypress(keypress) = input_event {
       match keypress {
         Keypress {
-          modifier_keys: None,
-          non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Left)),
+          maybe_modifier_keys: None,
+          non_modifier_key: NonModifierKey::Special(SpecialKey::Left),
         } => {
           event_consumed = true;
           self.switch_focus(KeyCode::Left);
@@ -112,8 +112,8 @@ impl AppWithLayout {
           );
         }
         Keypress {
-          modifier_keys: None,
-          non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Right)),
+          maybe_modifier_keys: None,
+          non_modifier_key: NonModifierKey::Special(SpecialKey::Right),
         } => {
           event_consumed = true;
           self.switch_focus(KeyCode::Right);

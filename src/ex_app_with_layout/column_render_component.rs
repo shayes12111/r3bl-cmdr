@@ -60,8 +60,8 @@ impl Component<AppWithLayoutState, AppWithLayoutAction> for ColumnRenderComponen
       if let TWInputEvent::NonDisplayableKeypress(keypress) = input_event {
         match keypress {
           Keypress {
-            modifier_keys: None,
-            non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Up)),
+            maybe_modifier_keys: None,
+            non_modifier_key: NonModifierKey::Special(SpecialKey::Up),
           } => {
             spawn_and_consume_event!(event_consumed, shared_store, AppWithLayoutAction::AddPop(1));
             debug_log_action(
@@ -70,8 +70,8 @@ impl Component<AppWithLayoutState, AppWithLayoutAction> for ColumnRenderComponen
             );
           }
           Keypress {
-            modifier_keys: None,
-            non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Down)),
+            maybe_modifier_keys: None,
+            non_modifier_key: NonModifierKey::Special(SpecialKey::Down),
           } => {
             spawn_and_consume_event!(event_consumed, shared_store, AppWithLayoutAction::SubPop(1));
             debug_log_action(

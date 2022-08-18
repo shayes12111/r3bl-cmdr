@@ -110,8 +110,8 @@ impl TWApp<AppNoLayoutState, AppNoLayoutAction> for AppNoLayout {
       if let TWInputEvent::NonDisplayableKeypress(keypress) = input_event {
         match keypress {
           Keypress {
-            modifier_keys: None,
-            non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Up)),
+            maybe_modifier_keys: None,
+            non_modifier_key: NonModifierKey::Special(SpecialKey::Up),
           } => {
             spawn_and_consume_event!(event_consumed, shared_store, AppNoLayoutAction::AddPop(1));
             call_if_true!(
@@ -124,8 +124,8 @@ impl TWApp<AppNoLayoutState, AppNoLayoutAction> for AppNoLayout {
             );
           }
           Keypress {
-            modifier_keys: None,
-            non_modifier_key: Some(NonModifierKey::Special(SpecialKey::Down)),
+            maybe_modifier_keys: None,
+            non_modifier_key: NonModifierKey::Special(SpecialKey::Down),
           } => {
             spawn_and_consume_event!(event_consumed, shared_store, AppNoLayoutAction::SubPop(1));
             call_if_true!(
