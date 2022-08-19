@@ -194,24 +194,37 @@ impl AppWithLayout {
     shared_store: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
   ) -> CommonResult<()> {
     throws!({
-      box_start! {
-        in: tw_surface,
-        COL_1_ID,
-        Direction::Vertical,
-        (50, 100).try_into()?,
-        ["style1", "style2"]
-      };
-
-      render_component! {
-        in: tw_surface,
-        from: self.component_registry,
-        id: COL_1_ID,
-        has_focus: self.has_focus,
-        state: state,
-        shared_store: shared_store
-      };
-
-      tw_surface.box_end()?;
+      // REFACTOR: use make_box macro here to replace 3 statements below.
+      // box_start! {
+      //   in: tw_surface,
+      //   COL_1_ID,
+      //   Direction::Vertical,
+      //   (50, 100).try_into()?,
+      //   ["style1", "style2"]
+      // };
+      // render_component! {
+      //   in: tw_surface,
+      //   from: self.component_registry,
+      //   id: COL_1_ID,
+      //   has_focus: self.has_focus,
+      //   state: state,
+      //   shared_store: shared_store
+      // };
+      // tw_surface.box_end()?;
+      make_box! {
+        in:    tw_surface,
+        id:    COL_1_ID,
+        dir:   Direction::Vertical,
+        size:  (50, 100).try_into()?,
+        style: ["style1", "style2"],
+        render: {
+          from:         self.component_registry,
+          component_id: COL_1_ID,
+          has_focus:    self.has_focus,
+          state:        state,
+          shared_store: shared_store
+        }
+      }
     });
   }
 
