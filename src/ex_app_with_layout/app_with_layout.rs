@@ -71,6 +71,7 @@ impl TWApp<AppWithLayoutState, AppWithLayoutAction> for AppWithLayout {
   ) -> CommonResult<TWCommandQueue> {
     throws_with_return!({
       self.create_components_populate_registry_init_focus().await;
+      // REFACTOR: create macro for surface creation
       let mut tw_surface = TWSurface {
         stylesheet: style_helpers::create_stylesheet()?,
         ..TWSurface::default()
@@ -91,170 +92,158 @@ impl TWApp<AppWithLayoutState, AppWithLayoutAction> for AppWithLayout {
   }
 }
 
-impl AppWithLayout {
-  fn handle_left_right_input_to_switch_focus(
-    &mut self, input_event: &TWInputEvent,
-  ) -> Continuation {
-    let mut event_consumed = false;
+// Handle focus.
+mod focus {
+  use super::*;
 
-    // Handle Left, Right to switch focus between columns.
-    if let TWInputEvent::NonDisplayableKeypress(keypress) = input_event {
-      match keypress {
-        Keypress {
-          maybe_modifier_keys: None,
-          non_modifier_key: NonModifierKey::Special(SpecialKey::Left),
-        } => {
-          event_consumed = true;
-          self.switch_focus(KeyCode::Left);
-          debug_log_has_focus(
-            stringify!(AppWithLayout::app_handle_event).into(),
-            &self.has_focus,
-          );
+  impl AppWithLayout {
+    pub fn handle_left_right_input_to_switch_focus(
+      &mut self, input_event: &TWInputEvent,
+    ) -> Continuation {
+      let mut event_consumed = false;
+
+      // Handle Left, Right to switch focus between columns.
+      if let TWInputEvent::NonDisplayableKeypress(keypress) = input_event {
+        match keypress {
+          Keypress {
+            maybe_modifier_keys: None,
+            non_modifier_key: NonModifierKey::Special(SpecialKey::Left),
+          } => {
+            event_consumed = true;
+            self.switch_focus(KeyCode::Left);
+            debug_log_has_focus(
+              stringify!(AppWithLayout::app_handle_event).into(),
+              &self.has_focus,
+            );
+          }
+          Keypress {
+            maybe_modifier_keys: None,
+            non_modifier_key: NonModifierKey::Special(SpecialKey::Right),
+          } => {
+            event_consumed = true;
+            self.switch_focus(KeyCode::Right);
+            debug_log_has_focus(
+              stringify!(AppWithLayout::app_handle_event).into(),
+              &self.has_focus,
+            );
+          }
+          _ => {}
         }
-        Keypress {
-          maybe_modifier_keys: None,
-          non_modifier_key: NonModifierKey::Special(SpecialKey::Right),
-        } => {
-          event_consumed = true;
-          self.switch_focus(KeyCode::Right);
-          debug_log_has_focus(
-            stringify!(AppWithLayout::app_handle_event).into(),
-            &self.has_focus,
-          );
-        }
-        _ => {}
       }
-    }
 
-    if event_consumed {
-      Continuation::Return
-    } else {
-      Continuation::Continue
-    }
-  }
-
-  fn switch_focus(&mut self, code: KeyCode) {
-    if let Some(_id) = self.has_focus.get_id() {
-      if code == KeyCode::Left {
-        self.has_focus.set_id(COL_1_ID)
+      if event_consumed {
+        Continuation::Return
       } else {
-        self.has_focus.set_id(COL_2_ID)
+        Continuation::Continue
       }
-    } else {
-      log_no_err!(ERROR, "No focus id has been set, and it should be set!");
-    }
-  }
-
-  async fn create_components_populate_registry_init_focus(&mut self) {
-    let _component = ColumnRenderComponent::default();
-    let shared_component_r1 = Arc::new(RwLock::new(_component));
-    let shared_component_r2 = shared_component_r1.clone();
-
-    // Construct COL_1_ID.
-    if self.component_registry.id_does_not_exist(COL_1_ID) {
-      self.component_registry.put(COL_1_ID, shared_component_r1);
     }
 
-    // Construct COL_2_ID.
-    if self.component_registry.id_does_not_exist(COL_2_ID) {
-      self.component_registry.put(COL_2_ID, shared_component_r2);
-    }
-
-    // Init has focus.
-    if self.has_focus.get_id().is_none() {
-      self.has_focus.set_id(COL_1_ID);
-    }
-  }
-
-  /// Main container CONTAINER_ID.
-  async fn create_main_container<'a>(
-    &mut self, tw_surface: &mut TWSurface, state: &'a AppWithLayoutState,
-    shared_store: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
-  ) -> CommonResult<()> {
-    throws!({
-      tw_surface.box_start(TWBoxProps {
-        id: CONTAINER_ID.into(),
-        dir: Direction::Horizontal,
-        req_size: (100, 100).try_into()?,
-        ..Default::default()
-      })?;
-      self
-        .create_left_col(tw_surface, state, shared_store)
-        .await?;
-      self
-        .create_right_col(tw_surface, state, shared_store)
-        .await?;
-      tw_surface.box_end()?;
-    });
-  }
-
-  /// Left column COL_1_ID.
-  async fn create_left_col<'a>(
-    &mut self, tw_surface: &mut TWSurface, state: &'a AppWithLayoutState,
-    shared_store: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
-  ) -> CommonResult<()> {
-    throws!({
-      // REFACTOR: use make_box macro here to replace 3 statements below.
-      // box_start! {
-      //   in: tw_surface,
-      //   COL_1_ID,
-      //   Direction::Vertical,
-      //   (50, 100).try_into()?,
-      //   ["style1", "style2"]
-      // };
-      // render_component! {
-      //   in: tw_surface,
-      //   from: self.component_registry,
-      //   id: COL_1_ID,
-      //   has_focus: self.has_focus,
-      //   state: state,
-      //   shared_store: shared_store
-      // };
-      // tw_surface.box_end()?;
-      make_box! {
-        in:    tw_surface,
-        id:    COL_1_ID,
-        dir:   Direction::Vertical,
-        size:  (50, 100).try_into()?,
-        style: ["style1", "style2"],
-        render: {
-          from:         self.component_registry,
-          component_id: COL_1_ID,
-          has_focus:    self.has_focus,
-          state:        state,
-          shared_store: shared_store
+    fn switch_focus(&mut self, code: KeyCode) {
+      if let Some(_id) = self.has_focus.get_id() {
+        if code == KeyCode::Left {
+          self.has_focus.set_id(COL_1_ID)
+        } else {
+          self.has_focus.set_id(COL_2_ID)
         }
+      } else {
+        log_no_err!(ERROR, "No focus id has been set, and it should be set!");
       }
-    });
+    }
   }
+}
 
-  // REFACTOR: replace all the code below w/ new macros from create_left_col
-  /// Right column COL_2_ID.
-  async fn create_right_col(
-    &mut self, tw_surface: &mut TWSurface, state: &AppWithLayoutState,
-    shared_store: &SharedStore<AppWithLayoutState, AppWithLayoutAction>,
-  ) -> CommonResult<()> {
-    throws!({
-      tw_surface.box_start(TWBoxProps {
-        styles: tw_surface.stylesheet.find_styles_by_ids(vec!["style2"]),
-        id: COL_2_ID.to_string(),
-        dir: Direction::Vertical,
-        req_size: (50, 100).try_into()?,
-      })?;
+// Handle component registry and rendering.
+mod component_construction_and_rendering {
+  use super::*;
 
-      // OPTIMIZE: macro?
-      if let Some(shared_component) = self.component_registry.get(COL_2_ID) {
-        let current_box = tw_surface.current_box()?;
-        let queue = shared_component
-          .write()
-          .await
-          .render(&self.has_focus, current_box, state, shared_store)
-          .await?;
-        tw_surface.render_buffer += queue;
+  impl AppWithLayout {
+    pub async fn create_components_populate_registry_init_focus(&mut self) {
+      let _component = ColumnRenderComponent::default();
+      let shared_component_r1 = Arc::new(RwLock::new(_component));
+      let shared_component_r2 = shared_component_r1.clone();
+
+      // Construct COL_1_ID.
+      if self.component_registry.id_does_not_exist(COL_1_ID) {
+        self.component_registry.put(COL_1_ID, shared_component_r1);
       }
 
-      tw_surface.box_end()?;
-    });
+      // Construct COL_2_ID.
+      if self.component_registry.id_does_not_exist(COL_2_ID) {
+        self.component_registry.put(COL_2_ID, shared_component_r2);
+      }
+
+      // Init has focus.
+      if self.has_focus.get_id().is_none() {
+        self.has_focus.set_id(COL_1_ID);
+      }
+    }
+
+    /// Main container CONTAINER_ID.
+    pub async fn create_main_container<'a>(
+      &mut self, tw_surface: &mut TWSurface, state: &'a AppWithLayoutState,
+      shared_store: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
+    ) -> CommonResult<()> {
+      throws!({
+        // REFACTOR: use box_props! instead of TWBoxProps
+        tw_surface.box_start(TWBoxProps {
+          id: CONTAINER_ID.into(),
+          dir: Direction::Horizontal,
+          req_size: (100, 100).try_into()?,
+          ..Default::default()
+        })?;
+        self
+          .create_left_col(tw_surface, state, shared_store)
+          .await?;
+        self
+          .create_right_col(tw_surface, state, shared_store)
+          .await?;
+        tw_surface.box_end()?;
+      });
+    }
+
+    /// Left column COL_1_ID.
+    async fn create_left_col<'a>(
+      &mut self, tw_surface: &mut TWSurface, state: &'a AppWithLayoutState,
+      shared_store: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
+    ) -> CommonResult<()> {
+      throws!({
+        make_box! {
+          in:    tw_surface,
+          id:    COL_1_ID,
+          dir:   Direction::Vertical,
+          size:  (50, 100).try_into()?,
+          style: ["style1"],
+          render: {
+            from:         self.component_registry,
+            has_focus:    self.has_focus,
+            state:        state,
+            shared_store: shared_store
+          }
+        }
+      });
+    }
+
+    /// Right column COL_2_ID.
+    async fn create_right_col(
+      &mut self, tw_surface: &mut TWSurface, state: &AppWithLayoutState,
+      shared_store: &SharedStore<AppWithLayoutState, AppWithLayoutAction>,
+    ) -> CommonResult<()> {
+      throws!({
+        make_box! {
+          in:    tw_surface,
+          id:    COL_2_ID,
+          dir:   Direction::Vertical,
+          size:  (50, 100).try_into()?,
+          style: ["style2"],
+          render: {
+            from:         self.component_registry,
+            has_focus:    self.has_focus,
+            state:        state,
+            shared_store: shared_store
+          }
+        }
+      });
+    }
   }
 }
 
