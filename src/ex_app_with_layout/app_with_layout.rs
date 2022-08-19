@@ -194,12 +194,31 @@ impl AppWithLayout {
     shared_state: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
   ) -> CommonResult<()> {
     throws!({
-      tw_surface.box_start(TWBoxProps {
-        styles: tw_surface.stylesheet.find_styles_by_ids(vec!["style1"]),
-        id: COL_1_ID.into(),
-        dir: Direction::Vertical,
-        req_size: (50, 100).try_into()?,
-      })?;
+      // REFACTOR: use the box_start! macro
+      // REFACTOR: use the box_props! macro
+      box_start! {
+        in: tw_surface,
+        COL_1_ID,
+        Direction::Vertical,
+        (50, 100).try_into()?,
+        ["style1", "style2"]
+      };
+
+      // REFACTOR: delete this comment
+      // tw_surface.box_start(box_props! {
+      //   COL_1_ID,
+      //   Direction::Vertical,
+      //   (50, 100).try_into()?,
+      //   get_styles! { from: tw_surface.stylesheet => ["style1", "style2"] }
+      // })?;
+
+      // REFACTOR: delete this comment
+      // tw_surface.box_start(TWBoxProps {
+      //   styles: tw_surface.stylesheet.find_styles_by_ids(vec!["style1"]),
+      //   id: COL_1_ID.into(),
+      //   dir: Direction::Vertical,
+      //   req_size: (50, 100).try_into()?,
+      // })?;
 
       // OPTIMIZE: macro?
       if let Some(shared_component) = self.component_registry.get(COL_1_ID) {
