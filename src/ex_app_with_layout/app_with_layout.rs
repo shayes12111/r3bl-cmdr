@@ -191,11 +191,9 @@ impl AppWithLayout {
   /// Left column COL_1_ID.
   async fn create_left_col<'a>(
     &mut self, tw_surface: &mut TWSurface, state: &'a AppWithLayoutState,
-    shared_state: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
+    shared_store: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
   ) -> CommonResult<()> {
     throws!({
-      // REFACTOR: use the box_start! macro
-      // REFACTOR: use the box_props! macro
       box_start! {
         in: tw_surface,
         COL_1_ID,
@@ -204,41 +202,24 @@ impl AppWithLayout {
         ["style1", "style2"]
       };
 
-      // REFACTOR: delete this comment
-      // tw_surface.box_start(box_props! {
-      //   COL_1_ID,
-      //   Direction::Vertical,
-      //   (50, 100).try_into()?,
-      //   get_styles! { from: tw_surface.stylesheet => ["style1", "style2"] }
-      // })?;
-
-      // REFACTOR: delete this comment
-      // tw_surface.box_start(TWBoxProps {
-      //   styles: tw_surface.stylesheet.find_styles_by_ids(vec!["style1"]),
-      //   id: COL_1_ID.into(),
-      //   dir: Direction::Vertical,
-      //   req_size: (50, 100).try_into()?,
-      // })?;
-
-      // OPTIMIZE: macro?
-      if let Some(shared_component) = self.component_registry.get(COL_1_ID) {
-        let current_box = tw_surface.current_box()?;
-        let queue = shared_component
-          .write()
-          .await
-          .render(&self.has_focus, current_box, state, shared_state)
-          .await?;
-        tw_surface.render_buffer += queue;
-      }
+      render_component! {
+        in: tw_surface,
+        from: self.component_registry,
+        id: COL_1_ID,
+        has_focus: self.has_focus,
+        state: state,
+        shared_store: shared_store
+      };
 
       tw_surface.box_end()?;
     });
   }
 
+  // REFACTOR: replace all the code below w/ new macros from create_left_col
   /// Right column COL_2_ID.
   async fn create_right_col(
-    &mut self, tw_surface: &mut TWSurface, _state: &AppWithLayoutState,
-    _shared_store: &SharedStore<AppWithLayoutState, AppWithLayoutAction>,
+    &mut self, tw_surface: &mut TWSurface, state: &AppWithLayoutState,
+    shared_store: &SharedStore<AppWithLayoutState, AppWithLayoutAction>,
   ) -> CommonResult<()> {
     throws!({
       tw_surface.box_start(TWBoxProps {
@@ -254,7 +235,7 @@ impl AppWithLayout {
         let queue = shared_component
           .write()
           .await
-          .render(&self.has_focus, current_box, _state, _shared_store)
+          .render(&self.has_focus, current_box, state, shared_store)
           .await?;
         tw_surface.render_buffer += queue;
       }
