@@ -34,7 +34,7 @@ tokio = { version = "1.20.1", features = ["full"] }
 async-trait = "0.1.57"
 
 # Latest r3bl_rs_utils.
-r3bl_rs_utils = { version = "0.7.41", path = "../r3bl_rs_utils" }
+r3bl_rs_utils = { version = "0.7.42", path = "../r3bl_rs_utils" }
 r3bl_rs_utils_core = { version = "0.7.14", path = "../r3bl_rs_utils/core" }
 
 # Reedline.
