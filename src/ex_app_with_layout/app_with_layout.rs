@@ -185,11 +185,10 @@ mod component_construction_and_rendering {
     ) -> CommonResult<()> {
       throws!({
         // REFACTOR: use box_props! instead of TWBoxProps
-        tw_surface.box_start(TWBoxProps {
-          id: CONTAINER_ID.into(),
-          dir: Direction::Horizontal,
-          req_size: (100, 100).try_into()?,
-          ..Default::default()
+        tw_surface.box_start(box_props! {
+          id:   CONTAINER_ID,
+          dir:  Direction::Horizontal,
+          size: (100, 100).try_into()?,
         })?;
         self
           .create_left_col(tw_surface, state, shared_store)
@@ -208,11 +207,11 @@ mod component_construction_and_rendering {
     ) -> CommonResult<()> {
       throws!({
         make_box! {
-          in:    tw_surface,
-          id:    COL_1_ID,
-          dir:   Direction::Vertical,
-          size:  (50, 100).try_into()?,
-          style: ["style1"],
+          in:     tw_surface,
+          id:     COL_1_ID,
+          dir:    Direction::Vertical,
+          size:   (50, 100).try_into()?,
+          styles: ["style1"],
           render: {
             from:         self.component_registry,
             has_focus:    self.has_focus,
@@ -230,11 +229,11 @@ mod component_construction_and_rendering {
     ) -> CommonResult<()> {
       throws!({
         make_box! {
-          in:    tw_surface,
-          id:    COL_2_ID,
-          dir:   Direction::Vertical,
-          size:  (50, 100).try_into()?,
-          style: ["style2"],
+          in:     tw_surface,
+          id:     COL_2_ID,
+          dir:    Direction::Vertical,
+          size:   (50, 100).try_into()?,
+          styles: ["style2"],
           render: {
             from:         self.component_registry,
             has_focus:    self.has_focus,
