@@ -179,33 +179,29 @@ mod component_construction_and_rendering {
 
     /// Main container CONTAINER_ID.
     pub async fn create_main_container<'a>(
-      &mut self, tw_surface: &mut TWSurface, state: &'a AppWithLayoutState,
+      &mut self, surface: &mut Surface, state: &'a AppWithLayoutState,
       shared_store: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
     ) -> CommonResult<()> {
       throws!({
-        tw_surface.box_start(box_props! {
+        surface.box_start(box_props! {
           id:   CONTAINER_ID,
           dir:  Direction::Horizontal,
           size: (100, 100).try_into()?,
         })?;
-        self
-          .create_left_col(tw_surface, state, shared_store)
-          .await?;
-        self
-          .create_right_col(tw_surface, state, shared_store)
-          .await?;
-        tw_surface.box_end()?;
+        self.create_left_col(surface, state, shared_store).await?;
+        self.create_right_col(surface, state, shared_store).await?;
+        surface.box_end()?;
       });
     }
 
     /// Left column COL_1_ID.
     async fn create_left_col<'a>(
-      &mut self, tw_surface: &mut TWSurface, state: &'a AppWithLayoutState,
+      &mut self, surface: &mut Surface, state: &'a AppWithLayoutState,
       shared_store: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
     ) -> CommonResult<()> {
       throws!({
         make_box! {
-          in:     tw_surface,
+          in:     surface,
           id:     COL_1_ID,
           dir:    Direction::Vertical,
           size:   (50, 100).try_into()?,
@@ -222,12 +218,12 @@ mod component_construction_and_rendering {
 
     /// Right column COL_2_ID.
     async fn create_right_col(
-      &mut self, tw_surface: &mut TWSurface, state: &AppWithLayoutState,
+      &mut self, surface: &mut Surface, state: &AppWithLayoutState,
       shared_store: &SharedStore<AppWithLayoutState, AppWithLayoutAction>,
     ) -> CommonResult<()> {
       throws!({
         make_box! {
-          in:     tw_surface,
+          in:     surface,
           id:     COL_2_ID,
           dir:    Direction::Vertical,
           size:   (50, 100).try_into()?,
