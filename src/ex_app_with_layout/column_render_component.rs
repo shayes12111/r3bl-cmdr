@@ -102,8 +102,8 @@ impl Component<AppWithLayoutState, AppWithLayoutAction> for ColumnRenderComponen
 
       // Setup intermediate vars.
       let box_origin_pos = current_box.origin_pos; // Adjusted for style margin (if any).
-      let box_bounding_size = current_box.bounding_size; // Adjusted for style margin (if any).
-      let mut content_cursor_pos = Position { col: 0, row: 0 };
+      let box_bounding_size = current_box.bounding_size; // Adjusted for style margin (if any).a
+      let mut content_cursor_pos = position!(col: 0 , row: 0 );
       let mut queue: TWCommandQueue = tw_command_queue!();
 
       // Line 1.
