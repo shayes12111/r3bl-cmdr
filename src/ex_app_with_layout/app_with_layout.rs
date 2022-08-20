@@ -71,23 +71,22 @@ impl TWApp<AppWithLayoutState, AppWithLayoutAction> for AppWithLayout {
   ) -> CommonResult<TWCommandQueue> {
     throws_with_return!({
       self.create_components_populate_registry_init_focus().await;
-      // REFACTOR: create macro for surface creation
-      let mut tw_surface = TWSurface {
+
+      let mut surface = surface_start! {
         stylesheet: style_helpers::create_stylesheet()?,
-        ..TWSurface::default()
-      };
-      tw_surface.surface_start(TWSurfaceProps {
         pos: (0, 0).into(),
         size: (window_size.cols, window_size.rows - 1).into(), // Leave row at bottom for message.
-      })?;
+      };
+
       self
-        .create_main_container(&mut tw_surface, state, shared_store)
+        .create_main_container(&mut surface, state, shared_store)
         .await?;
-      tw_surface.surface_end()?;
 
-      status_bar_helpers::render(&mut tw_surface.render_buffer, window_size);
+      surface.surface_end()?;
 
-      tw_surface.render_buffer
+      status_bar_helpers::render(&mut surface.render_buffer, window_size);
+
+      surface.render_buffer
     });
   }
 }
@@ -184,7 +183,6 @@ mod component_construction_and_rendering {
       shared_store: &'a SharedStore<AppWithLayoutState, AppWithLayoutAction>,
     ) -> CommonResult<()> {
       throws!({
-        // REFACTOR: use box_props! instead of TWBoxProps
         tw_surface.box_start(box_props! {
           id:   CONTAINER_ID,
           dir:  Direction::Horizontal,
